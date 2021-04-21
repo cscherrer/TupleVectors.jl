@@ -3,7 +3,22 @@ uuid = "615932cf-77b6-4358-adcd-5b7eba981d7e"
 authors = ["Chad Scherrer <chad.scherrer@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+ArraysOfArrays = "65a8f2f4-9b39-5baf-92e2-a9cc46fdf018"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+ElasticArrays = "fdbdab4c-e67f-52f5-8c3f-e7b388dad3d4"
+GeneralizedGenerated = "6b9d7cbe-bcb9-11e9-073f-15a7a543e2eb"
+GoldenSequences = "e13314f6-e9b3-11e9-0763-f13dff015e8a"
+MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
+MeasureTheory = "eadaa1a4-d27c-401d-8699-e962e1bbc33b"
+MonteCarloMeasurements = "0987c9cc-fe09-11e8-30f0-b96dd679fdca"
+NestedTuples = "a734d2a7-8d68-409b-9419-626914d4061d"
+Requires = "ae029012-a4dd-5104-9daa-d747884805df"
+Sobol = "ed01d8cd-4d21-5b2a-85b4-cc3bdc58bad4"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
 [compat]
+NestedTuples = "0.3.3"
 julia = "1"
 
 [extras]
