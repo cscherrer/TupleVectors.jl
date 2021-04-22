@@ -80,3 +80,18 @@ julia> push!(fancy, (x = [7,8,9], y = rand(3,2), z = true))
 4-element TupleVector with schema (x = Vector{Int64}, y = Matrix{Float64}, z = Bool)
 (x = [10.5±4.7, 5.5±3.0, 3.5e13±7.0e13], y = [0.19±0.39 0.048±0.096; 0.064±0.13 0.051±0.1; 0.23±0.46 0.2±0.4], z = 0.5±0.58)
 ```
+
+It's often important to be able to create a new `Vector` or `TupleVector` from an existing one. For that we have `@with`:
+```julia
+julia> tv = TupleVector((u=rand(1000), v=rand(1000)))
+1000-element TupleVector with schema (u = Float64, v = Float64)
+(u = 0.505±0.29, v = 0.502±0.29)
+
+julia> polar = @with tv begin
+              r = hypot(u,v)
+              θ = atan(v,u)
+              (;r,θ)
+              end
+1000-element TupleVector with schema (r = Float64, θ = Float64)
+(r = 0.77±0.29, θ = 0.78±0.41)
+```
