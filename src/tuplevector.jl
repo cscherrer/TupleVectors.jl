@@ -81,7 +81,7 @@ function Base.getindex(x::TupleVector, j)
     modify(f, unwrap(x), Leaves())
 end
 
-function Base.setindex!(a::TupleVector{T,X}, x::T, j::Int) where {T,X}
+function Base.setindex!(a::TupleVector, x, j::Int) 
     a1 = flatten(unwrap(a))
     x1 = flatten(x)
 
@@ -132,8 +132,10 @@ NestedTuples.flatten(tv::TupleVector) = TupleVector(flatten(unwrap(tv)))
 #     TupleVector{T,X}(data)
 # end
 
+export rmap
+
 function NestedTuples.rmap(f, tv::TupleVector)
-    return rmap(f, unwrap(tv))
+    return TupleVector(rmap(f, unwrap(tv)))
 end
 
 function Base.resize!(tv::TupleVector, n::Int)
