@@ -17,13 +17,12 @@ end
 function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
     n = length(tv)
     
-    ωtv(n) = merge(hcube_nt, tv[n])
     (ω,) = keys(hcube_nt)
-
-    result = chainvec(NestedTuples.with(m, ωtv(1), ex), n)
+    NestedTuples.with(m, hcube_nt, :(next!($ω)))
+    result = @inbounds chainvec(NestedTuples.with(m, hcube_nt, tv[1], ex), n)
     for j in 2:n
         NestedTuples.with(m, hcube_nt, :(next!($ω)))
-        result[j] = NestedTuples.with(m, ωtv(j), ex)
+        @inbounds result[j] = NestedTuples.with(m, hcube_nt, tv[j], ex)
     end
     return result
 end
