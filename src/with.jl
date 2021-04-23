@@ -10,11 +10,11 @@ export @with
 
 #########################################
 
-function NestedTuples.with(tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E}
+function NestedTuples.with(m::Module, tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E}
     n = length(tv)
-    result = chainvec(NestedTuples.with(tv[1], ex), n)
+    result = chainvec(NestedTuples.with(m, tv[1], ex), n)
     for j in 2:n
-        result[j] = NestedTuples.with(tv[j], ex)
+        result[j] = NestedTuples.with(m, tv[j], ex)
     end
     return result
 end

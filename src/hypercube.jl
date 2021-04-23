@@ -1,3 +1,6 @@
+using GeneralizedGenerated
+using NestedTuples
+
 abstract type Hypercube{k} end
 
 
@@ -8,6 +11,28 @@ end
 function Base.rand(ω::RandHypercube)
     rand(ω.rng)
 end
+
+
+
+function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
+    n = length(tv)
+    
+    ωtv(n) = merge(hcube_nt, tv[n])
+    (ω,) = keys(hcube_nt)
+
+    result = chainvec(NestedTuples.with(m, ωtv(1), ex), n)
+    for j in 2:n
+        NestedTuples.with(m, hcube_nt, :(next!($ω)))
+        result[j] = NestedTuples.with(m, ωtv(j), ex)
+    end
+    return result
+end
+
+
+# function NestedTuples.with(ω::Hypercube, nt::NamedTuple, ex::TypelevelExpr{E}) where {E}
+#     next!(ω)
+#     NestedTuples.with(nt, ex)
+# end
 
 
 # TODO: Add interface for Hypercube
