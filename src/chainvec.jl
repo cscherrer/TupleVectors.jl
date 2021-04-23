@@ -1,4 +1,5 @@
-
+import StructArrays
+using StructArrays: StructVector
 """
 chainvec(x::T, n=1)
 
