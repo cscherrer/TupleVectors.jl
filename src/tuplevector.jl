@@ -8,6 +8,8 @@ struct TupleVector{T,X} <: AbstractVector{T}
     data :: X
 end
 
+Base.ismutable(::TupleVector) = true
+
 NestedTuples.unwrap(tv::TupleVector) = getfield(tv, :data)
 
 function TupleVector(data::X) where {X <: NamedTuple}
