@@ -26,3 +26,12 @@ end
 #     r = sqrt(-2 * log(u))
 #     (x = r * cospi(2v), y = r * sinpi(2v)) 
 # end
+
+function NestedTuples.with(m::Module, n::Int, ex::TypelevelExpr{E}) where {E}
+    result = chainvec(NestedTuples.with(m, NamedTuple(), ex), n)
+    
+    for j in 2:n
+        result[j] = NestedTuples.with(m, NamedTuple(), ex)
+    end
+    return result
+end
