@@ -95,3 +95,45 @@ julia> polar = @with tv begin
 1000-element TupleVector with schema (r = Float64, θ = Float64)
 (r = 0.77±0.29, θ = 0.78±0.41)
 ```
+
+`@with` can be extended by adding methods to `NestedTuples.with`. For example, here's on with signature
+```julia
+NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, n :: Int, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
+```
+
+```julia
+julia> using TupleVectors, Sobol, UnicodePlots
+
+julia> ω = SobolHypercube(2)
+SobolHypercube{2}(2-dimensional Sobol sequence on [0,1]^2, [0.5, 0.5], Base.RefValue{Int64}(0))
+
+julia> tv = @with (;ω) 1000 begin
+           x = 2π * rand(ω)
+           y = sin(x) + rand(ω)
+           (; x, y)
+       end
+1000-element TupleVector with schema (x = Float64, y = Float64)
+(x = 3.14±1.8, y = 0.5±0.77)
+
+julia> @with TupleVectors.unwrap(tv) begin
+           scatterplot(x,y)
+       end
+      ┌────────────────────────────────────────┐ 
+    2 │⠀⠀⠀⠀⠀⠀⠤⣲⡞⢳⣶⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      │⠀⠀⠀⠀⣐⣺⣑⡮⡽⢮⠵⣚⢗⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      │⠀⠀⠠⢖⠟⢵⠆⣝⣳⣟⣫⠔⡫⠺⡢⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      │⠀⠰⣪⡙⣮⢛⣍⡳⢵⡾⢕⡩⢜⠚⠫⣳⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      │⡠⣳⣥⡺⢤⡟⡒⢽⣍⢝⡿⣒⡗⡮⢟⣪⢶⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      │⢣⢧⡫⢶⣪⡽⠉⠁⠀⠀⠈⠡⢪⢭⠮⣑⡖⡊⢅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠀⠀⠀⠀│ 
+      │⠯⢆⢟⣫⠋⠀⠀⠀⠀⠀⠀⠀⠀⠑⣝⡋⡽⠜⡫⡢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⠖⠀⠀⠀⠀│ 
+      │⣞⠞⡔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢝⠱⡱⢬⣭⣢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡐⡘⠭⡥⠀⠀⠀⠀│ 
+      │⡔⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠣⢢⣒⣓⡡⢳⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣜⠝⣛⣊⠀⠀⠀⠀│ 
+      │⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢁⡪⠯⢍⠧⢛⡲⣀⡀⠀⠀⢀⣐⢜⡻⣱⣻⠦⡑⠀⠀⠀⠀│ 
+      │⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⣝⡛⣟⠿⢯⠯⣫⡛⣻⣛⠿⡽⢿⣯⢟⣟⠋⠉⠉⠉⠉│ 
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡭⡰⣬⣗⣛⢴⠺⠶⡞⣙⣺⣥⢾⡬⠂⠀⠀⠀⠀⠀│ 
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠯⣐⡮⠶⣩⢵⣥⣽⠰⢵⣚⡜⠀⠀⠀⠀⠀⠀⠀│ 
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠩⣝⡭⢟⣢⣚⣲⠭⡫⠉⠀⠀⠀⠀⠀⠀⠀⠀│ 
+   -1 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠵⢍⡽⠭⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+      └────────────────────────────────────────┘ 
+      0                                        7
+```
