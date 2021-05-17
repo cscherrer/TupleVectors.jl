@@ -25,7 +25,10 @@ StructArrays = "0.5"
 julia = "1"
 
 [extras]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MeasureTheory = "eadaa1a4-d27c-401d-8699-e962e1bbc33b"
+Sobol = "ed01d8cd-4d21-5b2a-85b4-cc3bdc58bad4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Test", "LinearAlgebra", "MeasureTheory", "Sobol"]
