@@ -13,29 +13,29 @@ function Base.rand(ω::RandHypercube)
 end
 
 
-
+# TODO: Add a test
 function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
     n = length(tv)
-    
     (ω,) = keys(hcube_nt)
+    next!ω_expr = NestedTuples.TypelevelExpr(:($next!($ω)))
     next! = TupleVectors.next!
-    NestedTuples.with(m, hcube_nt, :($next!($ω)))
+    NestedTuples.with(m, hcube_nt, next!ω_expr)
     result = @inbounds chainvec(NestedTuples.with(m, hcube_nt, tv[1], ex), n)
     for j in 2:n
-        NestedTuples.with(m, hcube_nt, :($next!($ω)))
+        NestedTuples.with(m, hcube_nt, next!ω_expr)
         @inbounds result[j] = NestedTuples.with(m, hcube_nt, tv[j], ex)
     end
     return result
 end
 
+# TODO: Add a test
 function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, n :: Int, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
-    
     (ω,) = keys(hcube_nt)
-    next! = TupleVectors.next!
-    NestedTuples.with(m, hcube_nt, :($next!($ω)))
+    next!ω_expr = NestedTuples.TypelevelExpr(:($next!($ω)))
+    NestedTuples.with(m, hcube_nt, next!ω_expr)
     result = @inbounds chainvec(NestedTuples.with(m, hcube_nt, ex), n)
     for j in 2:n
-        NestedTuples.with(m, hcube_nt, :($next!($ω)))
+        NestedTuples.with(m, hcube_nt, next!ω_expr)
         @inbounds result[j] = NestedTuples.with(m, hcube_nt, ex)
     end
     return result
