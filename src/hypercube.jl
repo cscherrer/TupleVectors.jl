@@ -1,7 +1,8 @@
 using GeneralizedGenerated
 using NestedTuples
+using Random: AbstractRNG
 
-abstract type Hypercube{k} end
+abstract type Hypercube{k} <: AbstractRNG end
 
 
 struct RandHypercube{T} <: Hypercube{Inf}
@@ -12,6 +13,20 @@ function Base.rand(ω::RandHypercube)
     rand(ω.rng)
 end
 
+function Base.rand(ω::Hypercube, ::Type{T}) where {T <: Integer}
+    a = typemin(T)
+    b = typemax(T)
+    p = rand(ω)
+    return b*p + a*(1-p)
+end
+
+function Base.rand(ω::Hypercube, ::Type{T}) where {T <: AbstractFloat}
+    convert(T, rand(ω))
+end
+
+function Base.rand(ω::Hypercube, ::Type{T}) where {T <: Complex}
+    convert(T, rand(ω) + rand(ω)im)
+end
 
 # TODO: Add a test
 function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, tv::TupleVector{T,X}, ex::TypelevelExpr{E}) where {T,X,E, N, H<:Hypercube}
