@@ -1,6 +1,7 @@
 using GeneralizedGenerated
 using NestedTuples
 using Random: AbstractRNG
+using Random
 
 abstract type Hypercube{k} <: AbstractRNG end
 
@@ -17,7 +18,7 @@ function Base.rand(ω::Hypercube, ::Type{T}) where {T <: Integer}
     a = typemin(T)
     b = typemax(T)
     p = rand(ω)
-    return b*p + a*(1-p)
+    return convert(T, b*p + a*(1-p))
 end
 
 function Base.rand(ω::Hypercube, ::Type{T}) where {T <: AbstractFloat}
