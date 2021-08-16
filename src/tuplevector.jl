@@ -60,14 +60,19 @@ function Base.showarg(io::IO, tv::TupleVector{T}, toplevel) where T
     toplevel && println(io, " with schema ", schema(T))
 end
 
-function Base.show(io::IO, ::MIME"text/plain", tv::TupleVector)
+Base.show(io::IO, ::MIME"text/plain", tv::TupleVector) = show(io, tv)
+Base.show(io::IO, ::MIME"text/html", tv::TupleVector) = show(io, tv)
+
+function Base.show(io::IO, tv::TupleVector)
     summary(io, tv)
     print(io, summarize(tv))
 end
 
-function Base.show(io::IO, ::MIME"text/html", tv::TupleVector)
-    summary(io, tv)
-    print(io, summarize(tv))
+function Base.show(io::IO, ::MIME"text/plain", v::Vector{TV}) where {TV <: TupleVector}
+    io = IOContext(io, :compact => true)
+    n = length(v)
+    println(io, n,"-element Vector{$TV}")
+    foreach(v) do tv println(io, summarize(tv)) end
 end
 
 function Base.getindex(x::TupleVector, j)
@@ -96,6 +101,7 @@ end
 function Base.size(tv::TupleVector)
     size(flatten(unwrap(tv))[1])
 end
+
 
 # TODO: Make this pass @code_warntype
 Base.getproperty(tv::TupleVector, k::Symbol) = maybewrap(getproperty(unwrap(tv), k))
