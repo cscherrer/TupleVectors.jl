@@ -6,6 +6,14 @@ using MeasureTheory
 using LinearAlgebra
 
 @testset "TupleVectors.jl" begin
+    ## Testing constructors
+    w = randn(10)
+    y = randn(10)
+    nt = (w=w, y=y)
+    A = TupleVector(nt)
+    B = TupleVector(; w=w, y=y)
+    @test A.w == B.w
+    
     @test chainvec(3,5)[1] == 3
 
 
