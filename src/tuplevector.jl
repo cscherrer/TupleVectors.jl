@@ -36,6 +36,10 @@ function TupleVector(::UndefInitializer, x::T, n::Int) where {T<:NamedTuple}
     return TupleVector{T, typeof(data)}(data)
 end
 
+function TupleVector(; kwargs...)
+    return TupleVector(NamedTuple(kwargs)) 
+end
+
 # function TupleVector(x::Union{Tuple, NamedTuple})
 #     flattened = flatten(x)
 #     @assert allequal(size.(flattened)...)
