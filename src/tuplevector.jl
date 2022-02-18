@@ -99,16 +99,7 @@ function Base.getindex(x::TupleVector, j::Int)
     modify(f, unwrap(x), Leaves())
 end
 
-function Base.getindex(x::TupleVector, j...)
 
-    # TODO: Bounds checking doesn't affect performance, am I doing it right?
-    function f(arr)
-        # @boundscheck all(j .∈ axes(arr))
-        return @inbounds arr[j...]
-    end
-
-    TupleVector(modify(f, unwrap(x), Leaves()))
-end
 
 function Base.setindex!(a::TupleVector, x, j::Int)
     a1 = flatten(unwrap(a))
