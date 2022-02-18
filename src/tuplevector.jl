@@ -101,7 +101,7 @@ end
 
 
 
-function Base.setindex!(a::TupleVector, x, j::Int)
+function Base.setindex!(a::TupleVector, x, j::Integer)
     a1 = flatten(unwrap(a))
     x1 = flatten(x)
 
