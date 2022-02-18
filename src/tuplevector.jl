@@ -113,8 +113,6 @@ function Base.size(tv::TupleVector)
 end
 
 
-
-
 # TODO: Make this pass @code_warntype
 Base.getproperty(tv::TupleVector, k::Symbol) = maybewrap(getproperty(unwrap(tv), k))
 
