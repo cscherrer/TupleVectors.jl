@@ -23,7 +23,6 @@ function TupleVector(a::AbstractVector{T}) where {T}
     return x
 end
 
-
 function Base.similar(a::TupleVector, ::Type{T}, dims::Dims) where {T}
     data = unwrap(a)
     sim = rmap(x->similar(x, dims), data)
