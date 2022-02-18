@@ -88,7 +88,7 @@ function Base.show(io::IO, ::MIME"text/plain", v::Vector{TV}) where {TV <: Tuple
     foreach(v) do tv println(io, summarize(tv)) end
 end
 
-function Base.getindex(x::TupleVector, j::Int)
+function Base.getindex(x::TupleVector, j::Integer)
 
     # TODO: Bounds checking doesn't affect performance, am I doing it right?
     function f(arr)
