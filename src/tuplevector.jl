@@ -30,8 +30,6 @@ function Base.similar(a::TupleVector, ::Type{T}, dims::Dims) where {T}
     return TupleVector(sim)
 end
 
-
-
 function TupleVector(::UndefInitializer, x::T, n::Int) where {T<:NamedTuple}
 
     function initialize(n::Int)
