@@ -1,4 +1,4 @@
-using Sobol: SobolSeq
+using .Sobol: SobolSeq
 import .Sobol
 using ..TupleVectors
 

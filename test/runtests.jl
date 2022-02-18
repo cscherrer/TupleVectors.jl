@@ -12,8 +12,11 @@ using LinearAlgebra
     nt = (w=w, y=y)
     A = TupleVector(nt)
     B = TupleVector(; w=w, y=y)
+    C = similar(B)
+    @test typeof(C) <: TupleVector
+    @test typeof(C[1:3]) <: TupleVector
     @test A.w == B.w
-    
+
     @test chainvec(3,5)[1] == 3
 
 
