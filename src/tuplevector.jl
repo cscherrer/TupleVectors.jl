@@ -23,12 +23,21 @@ function TupleVector(a::AbstractVector{T}) where {T}
     return x
 end
 
+
+function Base.similar(a::TupleVector, ::Type{T}, dims::Dims) where {T}
+    data = unwrap(a)
+    sim = rmap(x->similar(x, dims), data)
+    return TupleVector(sim)
+end
+
+
+
 function TupleVector(::UndefInitializer, x::T, n::Int) where {T<:NamedTuple}
 
     function initialize(n::Int)
         f(x::T) where {T} = ElasticVector{T}(undef, n)
         f(x::DenseArray{T,N}) where {T,N} = nestedview(ElasticArray{T,N+1}(undef, size(x)..., n), N)
-        return f 
+        return f
     end
 
     data = rmap(initialize(n), x)
@@ -37,7 +46,7 @@ function TupleVector(::UndefInitializer, x::T, n::Int) where {T<:NamedTuple}
 end
 
 function TupleVector(; kwargs...)
-    return TupleVector(NamedTuple(kwargs)) 
+    return TupleVector(NamedTuple(kwargs))
 end
 
 # function TupleVector(x::Union{Tuple, NamedTuple})
@@ -79,8 +88,8 @@ function Base.show(io::IO, ::MIME"text/plain", v::Vector{TV}) where {TV <: Tuple
     foreach(v) do tv println(io, summarize(tv)) end
 end
 
-function Base.getindex(x::TupleVector, j)
-        
+function Base.getindex(x::TupleVector, j::Int)
+
     # TODO: Bounds checking doesn't affect performance, am I doing it right?
     function f(arr)
         # @boundscheck all(j .∈ axes(arr))
@@ -90,7 +99,18 @@ function Base.getindex(x::TupleVector, j)
     modify(f, unwrap(x), Leaves())
 end
 
-function Base.setindex!(a::TupleVector, x, j::Int) 
+function Base.getindex(x::TupleVector, j...)
+
+    # TODO: Bounds checking doesn't affect performance, am I doing it right?
+    function f(arr)
+        # @boundscheck all(j .∈ axes(arr))
+        return @inbounds arr[j...]
+    end
+
+    TupleVector(modify(f, unwrap(x), Leaves()))
+end
+
+function Base.setindex!(a::TupleVector, x, j::Int)
     a1 = flatten(unwrap(a))
     x1 = flatten(x)
 
@@ -105,6 +125,8 @@ end
 function Base.size(tv::TupleVector)
     size(flatten(unwrap(tv))[1])
 end
+
+
 
 
 # TODO: Make this pass @code_warntype
