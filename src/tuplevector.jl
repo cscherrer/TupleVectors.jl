@@ -157,3 +157,17 @@ end
 function Base.resize!(tv::TupleVector, n::Int)
     rmap(x -> resize!(x, n), unwrap(tv))
 end
+
+TypedTables.columnnames(::TupleVector{NamedTuple{N,T}}) where {N,T} = N
+
+Tables.istable(::Type{<:TupleVector}) = true
+Tables.rowaccess(::Type{<:TupleVector}) = true
+Tables.columnaccess(::Type{<:TupleVector}) = true
+
+Tables.schema(tv::TupleVector{NamedTuple{N,T}}) where {N,T} = Tables.Schema(N,T)
+
+# function Tables.columns(A::TupleVector)
+#    ...
+# end
+
+@inline Tables.rows(tv::TupleVector) = tv

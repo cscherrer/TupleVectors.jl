@@ -2,6 +2,8 @@ module TupleVectors
 
 using Requires: @require
 
+import Tables
+import TypedTables
 
 include("tuplevector.jl")
 include("summarize.jl")
