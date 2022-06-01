@@ -7,26 +7,27 @@ export SobolHypercube
 struct SobolHypercube{k} <: Hypercube{k}
     seq :: SobolSeq{k}
     value :: Vector{Float64}
-    index :: Ref{Int}  # start at zero
+    iter :: Iterators.Stateful{Vector{Float64}, Union{Nothing, Tuple{Float64, Int64}}}
 
     function SobolHypercube(k::Int)
         seq = SobolSeq(k)
         value = Sobol.next!(seq)
-        return new{k}(seq, value, 0)
+        return new{k}(seq, value, Iterators.Stateful(value))
     end
 end
 
 export next!
 
-function next!(s::SobolHypercube)
-    s.index[] = 0
-    Sobol.next!(s.seq, s.value)
+function next!(ω::SobolHypercube)
+    Sobol.next!(ω.seq, ω.value)
+    ω.iter.nextvalstate = iterate(ω.value)
+    ω.iter.taken = 0
+    return ω
 end
 
 
-function Base.rand(ω::SobolHypercube{k}) where {k}
-    ω.value[ω.index[] += 1]
-end
+Base.rand(ω::SobolHypercube) = popfirst!(ω.iter)
+    
 
 # function makeplot()
 #     ω = SobolHypercube(100)
