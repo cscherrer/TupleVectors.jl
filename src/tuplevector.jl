@@ -166,8 +166,6 @@ Tables.columnaccess(::Type{<:TupleVector}) = true
 
 Tables.schema(tv::TupleVector{NamedTuple{N,T}}) where {N,T} = Tables.Schema(N,T)
 
-# function Tables.columns(A::TupleVector)
-#    ...
-# end
+Tables.columns(tv::TupleVector) = unwrap(tv)
 
-@inline Tables.rows(tv::TupleVector) = tv
+Tables.rows(tv::TupleVector) = tv
