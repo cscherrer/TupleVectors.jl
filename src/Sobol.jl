@@ -1,8 +1,7 @@
-using .Sobol: SobolSeq
-import .Sobol
-using ..TupleVectors
+using Sobol: SobolSeq
 
 export SobolHypercube
+using Sobol
 
 struct SobolHypercube{k} <: Hypercube{k}
     seq :: SobolSeq{k}
@@ -16,9 +15,7 @@ struct SobolHypercube{k} <: Hypercube{k}
     end
 end
 
-export next!
-
-function next!(s::SobolHypercube)
+function Sobol.next!(s::SobolHypercube)
     s.index[] = 0
     Sobol.next!(s.seq, s.value)
 end
