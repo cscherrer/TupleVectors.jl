@@ -18,7 +18,6 @@ function NestedTuples.with(m::Module, hcube_nt::NamedTuple{N,Tuple{H}}, tv::Tupl
     n = length(tv)
     (ω,) = keys(hcube_nt)
     next!ω_expr = NestedTuples.TypelevelExpr(:($next!($ω)))
-    next! = TupleVectors.next!
     NestedTuples.with(m, hcube_nt, next!ω_expr)
     result = @inbounds chainvec(NestedTuples.with(m, hcube_nt, tv[1], ex), n)
     for j in 2:n

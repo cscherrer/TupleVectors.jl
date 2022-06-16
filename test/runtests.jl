@@ -38,8 +38,6 @@ using LinearAlgebra
         (eigs = eigvals!(x),)
     end
 
-    using Sobol
-
     ω = SobolHypercube(2)
 
     πapprox = @with (;ω) 10000 begin
