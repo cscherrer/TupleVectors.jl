@@ -2,6 +2,7 @@ using Sobol: SobolSeq
 
 export SobolHypercube
 import Sobol
+using Sobol: next!
 
 struct SobolHypercube{k} <: Hypercube{k}
     seq :: SobolSeq{k}
